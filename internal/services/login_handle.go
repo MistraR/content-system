@@ -65,13 +65,13 @@ func (c *CmsApp) Login(ctx *gin.Context) {
 func (c *CmsApp) generateSessionId(ctx context.Context, userId string) (string, error) {
 	sessionId := uuid.New().String()
 	sessionKey := utils.GetSessionKey(userId)
-	err := c.rdb.Set(ctx, sessionKey, sessionId, time.Second*30).Err()
+	err := c.rdb.Set(ctx, sessionKey, sessionId, time.Hour*30).Err()
 	if err != nil {
 		fmt.Printf("rdb set error = %v \n", err)
 		return "", err
 	}
 	authKey := utils.GetAuthKey(sessionId)
-	err = c.rdb.Set(ctx, authKey, time.Now().Unix(), time.Second*30).Err()
+	err = c.rdb.Set(ctx, authKey, time.Now().Unix(), time.Hour*30).Err()
 	if err != nil {
 		fmt.Printf("rdb set error = %v \n", err)
 		return "", err
