@@ -2,6 +2,7 @@ package services
 
 import (
 	"content-system/internal/dao"
+	"content-system/internal/utils"
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -63,13 +64,13 @@ func (c *CmsApp) Login(ctx *gin.Context) {
 
 func (c *CmsApp) generateSessionId(ctx context.Context, userId string) (string, error) {
 	sessionId := uuid.New().String()
-	sessionKey := fmt.Sprintf("session_id:%s", userId)
+	sessionKey := utils.GetSessionKey(userId)
 	err := c.rdb.Set(ctx, sessionKey, sessionId, time.Second*30).Err()
 	if err != nil {
 		fmt.Printf("rdb set error = %v \n", err)
 		return "", err
 	}
-	authKey := fmt.Sprintf("session_auth:%s", sessionId)
+	authKey := utils.GetAuthKey(sessionId)
 	err = c.rdb.Set(ctx, authKey, time.Now().Unix(), time.Second*30).Err()
 	if err != nil {
 		fmt.Printf("rdb set error = %v \n", err)

@@ -12,7 +12,7 @@ const (
 
 func CmsRouters(r *gin.Engine) {
 	cmsApp := services.NewCmsApp()
-	session := &SessionAuth{}
+	session := NewSessionAuth()
 	//该group下所有接口都需要经过session鉴权
 	root := r.Group(rootPath).Use(session.Auth)
 	{
